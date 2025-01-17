@@ -55,11 +55,9 @@ export async function createRouter(
         logger.error(
           'An unknown error occurred while fetching Azure resources.',
         );
-        res
-          .status(500)
-          .json({
-            error: 'An unknown error occurred while fetching Azure resources.',
-          });
+        res.status(500).json({
+          error: 'An unknown error occurred while fetching Azure resources.',
+        });
       }
     }
   });
