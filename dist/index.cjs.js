@@ -17,7 +17,11 @@ var Router__default = /*#__PURE__*/_interopDefaultCompat(Router);
 class AzureResourceGraphQuery {
   client;
   constructor(tenantId, clientId, clientSecret) {
-    const credentials = new identity.ClientSecretCredential(tenantId, clientId, clientSecret);
+    const credentials = new identity.ClientSecretCredential(
+      tenantId,
+      clientId,
+      clientSecret
+    );
     this.client = new armResourcegraph.ResourceGraphClient(credentials);
   }
   async queryResourcesByTag(subscriptionId, tagKey, tagValue) {
@@ -43,19 +47,31 @@ async function createRouter(options) {
   const tenantId = config.getString("azure.tenantId");
   const clientId = config.getString("azure.clientId");
   const clientSecret = config.getString("azure.clientSecret");
-  const azureResourceGraphQuery = new AzureResourceGraphQuery(tenantId, clientId, clientSecret);
+  const azureResourceGraphQuery = new AzureResourceGraphQuery(
+    tenantId,
+    clientId,
+    clientSecret
+  );
   router.get("/resources", async (req, res) => {
     const { tagKey, tagValue } = req.query;
     try {
-      const resources = await azureResourceGraphQuery.queryResourcesByTag(subscriptionId, tagKey, tagValue);
+      const resources = await azureResourceGraphQuery.queryResourcesByTag(
+        subscriptionId,
+        tagKey,
+        tagValue
+      );
       res.json(resources);
     } catch (error) {
       if (error instanceof Error) {
         logger.error(`Failed to fetch Azure resources: ${error.message}`);
         res.status(500).json({ error: error.message });
       } else {
-        logger.error("An unknown error occurred while fetching Azure resources.");
-        res.status(500).json({ error: "An unknown error occurred while fetching Azure resources." });
+        logger.error(
+          "An unknown error occurred while fetching Azure resources."
+        );
+        res.status(500).json({
+          error: "An unknown error occurred while fetching Azure resources."
+        });
       }
     }
   });
@@ -73,11 +89,7 @@ const azurePlugin = backendPluginApi.createBackendPlugin({
         logger: backendPluginApi.coreServices.logger,
         config: backendPluginApi.coreServices.rootConfig
       },
-      async init({
-        httpRouter,
-        logger,
-        config
-      }) {
+      async init({ httpRouter, logger, config }) {
         const router = await createRouter({
           logger,
           config

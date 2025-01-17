@@ -5,11 +5,19 @@ export class AzureResourceGraphQuery {
   private client: ResourceGraphClient;
 
   constructor(tenantId: string, clientId: string, clientSecret: string) {
-    const credentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
+    const credentials = new ClientSecretCredential(
+      tenantId,
+      clientId,
+      clientSecret,
+    );
     this.client = new ResourceGraphClient(credentials);
   }
 
-  async queryResourcesByTag(subscriptionId: string, tagKey: string, tagValue: string) {
+  async queryResourcesByTag(
+    subscriptionId: string,
+    tagKey: string,
+    tagValue: string,
+  ) {
     const query = `Resources
       | where tags['${tagKey}'] == '${tagValue}'`;
 
@@ -21,4 +29,3 @@ export class AzureResourceGraphQuery {
     return result.data;
   }
 }
-

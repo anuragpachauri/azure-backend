@@ -18,11 +18,7 @@ export const azurePlugin = createBackendPlugin({
         logger: coreServices.logger,
         config: coreServices.rootConfig,
       },
-      async init({
-        httpRouter,
-        logger,
-        config,
-      }) {
+      async init({ httpRouter, logger, config }) {
         const router = await createRouter({
           logger,
           config,
@@ -34,7 +30,7 @@ export const azurePlugin = createBackendPlugin({
           path: '/api/azure/resources',
           allow: 'unauthenticated',
         });
-        
+
         httpRouter.addAuthPolicy({
           path: '/api/azure/health',
           allow: 'unauthenticated',

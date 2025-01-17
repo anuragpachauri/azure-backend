@@ -30,22 +30,36 @@ export async function createRouter(
   const clientId = config.getString('azure.clientId');
   const clientSecret = config.getString('azure.clientSecret');
 
-  const azureResourceGraphQuery = new AzureResourceGraphQuery(tenantId, clientId, clientSecret);
+  const azureResourceGraphQuery = new AzureResourceGraphQuery(
+    tenantId,
+    clientId,
+    clientSecret,
+  );
 
   // Azure resources endpoint
   router.get('/resources', async (req, res) => {
     const { tagKey, tagValue } = req.query;
 
     try {
-      const resources = await azureResourceGraphQuery.queryResourcesByTag(subscriptionId, tagKey as string, tagValue as string);
+      const resources = await azureResourceGraphQuery.queryResourcesByTag(
+        subscriptionId,
+        tagKey as string,
+        tagValue as string,
+      );
       res.json(resources);
     } catch (error) {
       if (error instanceof Error) {
         logger.error(`Failed to fetch Azure resources: ${error.message}`);
         res.status(500).json({ error: error.message });
       } else {
-        logger.error('An unknown error occurred while fetching Azure resources.');
-        res.status(500).json({ error: 'An unknown error occurred while fetching Azure resources.' });
+        logger.error(
+          'An unknown error occurred while fetching Azure resources.',
+        );
+        res
+          .status(500)
+          .json({
+            error: 'An unknown error occurred while fetching Azure resources.',
+          });
       }
     }
   });
